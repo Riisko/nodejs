@@ -15,6 +15,7 @@ describe("Tools", function() {
        it("Load Abraham Lincoln's wiki page", function (done) {
           tools.loadWiki({first: "Abraham", last: "Lincoln"}, function(html) {
               expect(html).to.be.ok;
+              done();
           });
        });
         
