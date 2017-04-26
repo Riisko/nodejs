@@ -1,26 +1,52 @@
 import React from 'react';
 import Header from './Header';
-import ContestPreview from './ContestPreview';
+import ContestList from './ContestList';
+import Contest from './Contest';
+import * as api from '../api';
+const pushState = (obj, url) =>
+window.history.pushState(obj, '', url);
 
 class App extends React.Component {
   state = {
-    pageHeader: 'Naming Contests'
+    pageHeader: 'Naming Contests',
+    contests: this.props.initialContests
   };
   componentDidMount () {
-    //timers, listeners
+    
+  
   }
   componentWillUnmount () {
     //clean timers, listeners
+  }
+  fetchContest = (contestID) => {
+    pushState(
+      {currentContestId: contestID},
+       `/contest/${contestID}`
+      );
+      api.fetchContest(contestID).then(contest => {
+      this.setState({
+        pageHeader: contest.contestName,
+        currentContestId:contest.id,
+        contests: {
+          ...this.state.contests,
+          [contest.id]: contest
+        }
+      });
+    });
+  };
+  currentContent() {
+    if (this.state.currentContestId) {
+      return <Contest {...this.state.contests[this.state.currentContestId]} />;
+    }
+    return <ContestList 
+            onContestClick={this.fetchContest}
+            contests={this.state.contests}/>;
   }
   render() {
     return (
       <div className="App">
         <Header message={this.state.pageHeader} />
-        <div>
-          {this.props.contests.map(contest =>
-              <ContestPreview {...contest} />
-          )}
-        </div>
+        {this.currentContent()}
       </div>
     );
   }
