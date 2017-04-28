@@ -3,7 +3,7 @@ import ContestPreview from './ContestPreview';
 import PropTypes from 'prop-types';
 
 const ContestList = ({contests, onContestClick}) => (
-    <div className="ContestList" key={contests.id}>
+    <div className="ContestList" >
           {Object.keys(contests).map(contestID =>
               <ContestPreview 
                 key={contests.id}
